@@ -1,0 +1,11 @@
+node_modules/
+dist/
+
+# Environment files — set these in Vercel project settings for production
+.env.local
+.env*.local
+
+# macOS / editor
+.DS_Store
+.idea/
+.vscode/
