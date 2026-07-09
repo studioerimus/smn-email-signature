@@ -1,9 +1,13 @@
-const SYMBOL_W    = 36
-const SYMBOL_H    = 36
-const WORDMARK_MAX_W = 160
-const WORDMARK_H  = 22
+// Both marks render at a fixed 40px height; widths are derived from each
+// asset's own native aspect ratio (symbol 200x200, wordmark 572.33x80) so
+// neither is stretched.
+const MARK_H      = 40
+const SYMBOL_W    = 40
+const WORDMARK_W  = 286
 
 const TEXT_STYLE = 'font-family:Arial,Helvetica,sans-serif;font-size:16px;font-weight:bold;letter-spacing:-0.48px'
+
+const MARGIN = 20
 
 export interface SignatureFields {
   name: string
@@ -36,9 +40,13 @@ export function generateSignature(
 
   return `<!DOCTYPE html>
 <html><head><meta charset="utf-8"></head>
-<body style="margin:0;padding:24px;background:${colors.bg};">
-${signatureTable(fields, colors.primary, colors.secondary, colors.divider, symbol, wordmark)}
+<body style="margin:0;padding:0;background:${colors.bg};">
+${wrapWithMargin(signatureTable(fields, colors.primary, colors.secondary, colors.divider, symbol, wordmark))}
 </body></html>`
+}
+
+function wrapWithMargin(inner: string): string {
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding:${MARGIN}px;">${inner}</td></tr></table>`
 }
 
 function buildEmailHtml(fields: SignatureFields, m: SignatureMarks): string {
@@ -58,14 +66,15 @@ function buildEmailHtml(fields: SignatureFields, m: SignatureMarks): string {
 </style>
 </head>
 <body style="margin:0;padding:0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding:${MARGIN}px;">
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;border-collapse:collapse;">
 
-<tr><td style="padding:0 0 5px 0;">
-  <span class="smn-p" style="${TEXT_STYLE};color:#000000;display:block;margin:0;padding:0;line-height:1.3;">${esc(name) || '&nbsp;'}</span>
+<tr><td style="padding:0 0 2px 0;">
+  <span class="smn-p" style="${TEXT_STYLE};color:#000000;display:block;margin:0;padding:0;line-height:1;">${esc(name) || '&nbsp;'}</span>
 </td></tr>
 
 <tr><td style="padding:0 0 20px 0;">
-  <span class="smn-p" style="${TEXT_STYLE};color:#000000;display:block;margin:0;padding:0;line-height:1.3;">${esc(role) || '&nbsp;'}</span>
+  <span class="smn-p" style="${TEXT_STYLE};color:#000000;display:block;margin:0;padding:0;line-height:1;">${esc(role) || '&nbsp;'}</span>
 </td></tr>
 
 <tr><td style="padding:0 0 20px 0;">
@@ -85,22 +94,23 @@ function buildEmailHtml(fields: SignatureFields, m: SignatureMarks): string {
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr>
     <td style="width:50%;vertical-align:bottom;">
-      <img class="smn-lo" src="${m.symbolLight}" width="${SYMBOL_W}" height="${SYMBOL_H}" alt="" border="0"
-           style="display:block;border:0;width:${SYMBOL_W}px;height:${SYMBOL_H}px;">
-      <img class="smn-do" src="${m.symbolDark}" width="${SYMBOL_W}" height="${SYMBOL_H}" alt="" border="0"
-           style="display:none;border:0;width:${SYMBOL_W}px;height:${SYMBOL_H}px;">
+      <img class="smn-lo" src="${m.symbolLight}" width="${SYMBOL_W}" height="${MARK_H}" alt="" border="0"
+           style="display:block;border:0;width:${SYMBOL_W}px;height:${MARK_H}px;">
+      <img class="smn-do" src="${m.symbolDark}" width="${SYMBOL_W}" height="${MARK_H}" alt="" border="0"
+           style="display:none;border:0;width:${SYMBOL_W}px;height:${MARK_H}px;">
     </td>
     <td style="width:50%;text-align:right;vertical-align:bottom;">
-      <img class="smn-lo" src="${m.wordmarkLight}" width="${WORDMARK_MAX_W}" height="${WORDMARK_H}" alt="" border="0"
-           style="display:block;border:0;max-width:${WORDMARK_MAX_W}px;width:100%;height:auto;margin-left:auto;">
-      <img class="smn-do" src="${m.wordmarkDark}" width="${WORDMARK_MAX_W}" height="${WORDMARK_H}" alt="" border="0"
-           style="display:none;border:0;max-width:${WORDMARK_MAX_W}px;width:100%;height:auto;margin-left:auto;">
+      <img class="smn-lo" src="${m.wordmarkLight}" width="${WORDMARK_W}" height="${MARK_H}" alt="" border="0"
+           style="display:block;border:0;width:${WORDMARK_W}px;height:${MARK_H}px;margin-left:auto;">
+      <img class="smn-do" src="${m.wordmarkDark}" width="${WORDMARK_W}" height="${MARK_H}" alt="" border="0"
+           style="display:none;border:0;width:${WORDMARK_W}px;height:${MARK_H}px;margin-left:auto;">
     </td>
   </tr>
   </table>
 </td></tr>
 
 </table>
+</td></tr></table>
 </body>
 </html>`
 }
@@ -115,12 +125,12 @@ function signatureTable(
 ): string {
   return `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;border-collapse:collapse;">
 
-<tr><td style="padding:0 0 5px 0;">
-  <span style="${TEXT_STYLE};color:${primary};display:block;margin:0;padding:0;line-height:1.3;">${esc(name) || '&nbsp;'}</span>
+<tr><td style="padding:0 0 2px 0;">
+  <span style="${TEXT_STYLE};color:${primary};display:block;margin:0;padding:0;line-height:1;">${esc(name) || '&nbsp;'}</span>
 </td></tr>
 
 <tr><td style="padding:0 0 20px 0;">
-  <span style="${TEXT_STYLE};color:${primary};display:block;margin:0;padding:0;line-height:1.3;">${esc(role) || '&nbsp;'}</span>
+  <span style="${TEXT_STYLE};color:${primary};display:block;margin:0;padding:0;line-height:1;">${esc(role) || '&nbsp;'}</span>
 </td></tr>
 
 <tr><td style="padding:0 0 20px 0;">
@@ -140,12 +150,12 @@ function signatureTable(
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr>
     <td style="width:50%;vertical-align:bottom;">
-      <img src="${symbol}" width="${SYMBOL_W}" height="${SYMBOL_H}" alt="" border="0"
-           style="display:block;border:0;width:${SYMBOL_W}px;height:${SYMBOL_H}px;">
+      <img src="${symbol}" width="${SYMBOL_W}" height="${MARK_H}" alt="" border="0"
+           style="display:block;border:0;width:${SYMBOL_W}px;height:${MARK_H}px;">
     </td>
     <td style="width:50%;text-align:right;vertical-align:bottom;">
-      <img src="${wordmark}" width="${WORDMARK_MAX_W}" height="${WORDMARK_H}" alt="" border="0"
-           style="display:block;border:0;max-width:${WORDMARK_MAX_W}px;width:100%;height:auto;margin-left:auto;">
+      <img src="${wordmark}" width="${WORDMARK_W}" height="${MARK_H}" alt="" border="0"
+           style="display:block;border:0;width:${WORDMARK_W}px;height:${MARK_H}px;margin-left:auto;">
     </td>
   </tr>
   </table>

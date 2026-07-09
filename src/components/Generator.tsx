@@ -44,9 +44,9 @@ function Field({
 }
 
 export default function Generator() {
-  const [name, setName] = useState('')
-  const [role, setRole] = useState('')
-  const [phone, setPhone] = useState('')
+  const [name, setName] = useState('First Last')
+  const [role, setRole] = useState('Job Role')
+  const [phone, setPhone] = useState('(XXX) XXX-XXXX')
   const [previewMode, setPreviewMode] = useState<PreviewMode>('light')
   const [copied, setCopied] = useState(false)
 
