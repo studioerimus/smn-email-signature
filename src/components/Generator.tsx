@@ -1,9 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { generateSignature, SignatureFields, SignatureMode } from '../lib/generateSignature'
 import { copySignatureAsRich } from '../lib/copySignature'
-
-const BASE_URL = (import.meta.env.VITE_BASE_URL ?? '').replace(/\/$/, '')
-const isLocalhost = BASE_URL.includes('localhost') || BASE_URL === ''
+import { marks } from '../lib/marks'
 
 type PreviewMode = 'light' | 'dark'
 
@@ -56,7 +54,7 @@ export default function Generator() {
 
   const signatureMode: SignatureMode =
     previewMode === 'light' ? 'preview-light' : 'preview-dark'
-  const previewHtml = generateSignature(fields, signatureMode, BASE_URL)
+  const previewHtml = generateSignature(fields, signatureMode, marks)
 
   const iframeRef = useRef<HTMLIFrameElement>(null)
 
@@ -69,13 +67,12 @@ export default function Generator() {
     } catch {}
   }
 
-  // Re-adjust height whenever preview content changes
   useEffect(() => {
     adjustHeight()
   }, [previewHtml])
 
   const handleCopy = async () => {
-    const html = generateSignature(fields, 'email', BASE_URL)
+    const html = generateSignature(fields, 'email', marks)
     try {
       await copySignatureAsRich(html)
       setCopied(true)
@@ -135,12 +132,6 @@ export default function Generator() {
               >
                 {copied ? 'Copied ✓' : 'Copy signature'}
               </button>
-
-              {isLocalhost && (
-                <p className="text-[11px] text-amber-600 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 leading-relaxed">
-                  Set <code className="font-mono">VITE_BASE_URL</code> to your Vercel URL so image links resolve correctly in email clients.
-                </p>
-              )}
 
               <div className="space-y-3">
                 <p className={LABEL_CLASS}>Adding your signature</p>

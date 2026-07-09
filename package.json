@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "generate-pngs": "node scripts/generate-pngs.mjs",
+    "setup-marks": "node scripts/setup-marks.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
