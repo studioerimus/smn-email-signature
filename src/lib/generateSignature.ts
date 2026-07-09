@@ -24,6 +24,10 @@ export interface SignatureMarks {
 
 export type SignatureMode = 'preview-light' | 'preview-dark' | 'email'
 
+export function generatePlainTextSignature({ name, role, phone }: SignatureFields): string {
+  return [name, role, phone].filter(Boolean).join('\n')
+}
+
 export function generateSignature(
   fields: SignatureFields,
   mode: SignatureMode,

@@ -1,11 +1,16 @@
-// Copies the signature HTML as rich text so it pastes with formatting
-// into Gmail, Apple Mail, and Outlook signature editors.
-export async function copySignatureAsRich(html: string): Promise<void> {
+// Copies the signature as rich text so it pastes with full formatting
+// (layout, inline styles, embedded logos) into Gmail, Apple Mail, and
+// Outlook signature editors. Writes both text/html and text/plain so
+// paste targets that only read one of the two still get a sane result.
+export async function copySignatureAsRich(html: string, text: string): Promise<void> {
   // Modern Clipboard API — preferred; works in Chrome, Safari, Edge
   if (typeof ClipboardItem !== 'undefined' && navigator.clipboard?.write) {
     try {
-      const blob = new Blob([html], { type: 'text/html' })
-      await navigator.clipboard.write([new ClipboardItem({ 'text/html': blob })])
+      const item = new ClipboardItem({
+        'text/html': new Blob([html], { type: 'text/html' }),
+        'text/plain': new Blob([text], { type: 'text/plain' }),
+      })
+      await navigator.clipboard.write([item])
       return
     } catch {
       // Fall through to execCommand

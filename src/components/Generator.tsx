@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { generateSignature, SignatureFields, SignatureMode } from '../lib/generateSignature'
+import { generateSignature, generatePlainTextSignature, SignatureFields, SignatureMode } from '../lib/generateSignature'
 import { copySignatureAsRich } from '../lib/copySignature'
 import { marks } from '../lib/marks'
 
@@ -73,8 +73,9 @@ export default function Generator() {
 
   const handleCopy = async () => {
     const html = generateSignature(fields, 'email', marks)
+    const text = generatePlainTextSignature(fields)
     try {
-      await copySignatureAsRich(html)
+      await copySignatureAsRich(html, text)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
