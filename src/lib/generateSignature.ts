@@ -1,13 +1,16 @@
-// Both marks render at a fixed 40px height; widths are derived from each
+// Both marks render at a fixed 30px height; widths are derived from each
 // asset's own native aspect ratio (symbol 200x200, wordmark 572.33x80) so
-// neither is stretched.
-const MARK_H      = 40
-const SYMBOL_W    = 40
-const WORDMARK_W  = 286
+// neither is stretched. The embedded PNGs are rasterized well above this
+// display size, so downscaling here stays crisp on retina.
+const MARK_H      = 30
+const SYMBOL_W    = 30
+const WORDMARK_W  = 215
 
-const TEXT_STYLE = 'font-family:Arial,Helvetica,sans-serif;font-size:16px;font-weight:bold;letter-spacing:-0.48px'
+const FONT_BASE = 'font-family:Arial,Helvetica,sans-serif;font-size:15px;letter-spacing:-0.48px'
+const TEXT_BOLD    = `${FONT_BASE};font-weight:bold`
+const TEXT_REGULAR = `${FONT_BASE};font-weight:normal`
 
-const MARGIN = 20
+const MARGIN_V = 20
 
 export interface SignatureFields {
   name: string
@@ -50,7 +53,7 @@ ${wrapWithMargin(signatureTable(fields, colors.primary, colors.secondary, colors
 }
 
 function wrapWithMargin(inner: string): string {
-  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding:${MARGIN}px;">${inner}</td></tr></table>`
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding:${MARGIN_V}px 0;">${inner}</td></tr></table>`
 }
 
 function buildEmailHtml(fields: SignatureFields, m: SignatureMarks): string {
@@ -70,29 +73,29 @@ function buildEmailHtml(fields: SignatureFields, m: SignatureMarks): string {
 </style>
 </head>
 <body style="margin:0;padding:0;">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding:${MARGIN}px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding:${MARGIN_V}px 0;">
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;border-collapse:collapse;">
 
 <tr><td style="padding:0 0 2px 0;">
-  <span class="smn-p" style="${TEXT_STYLE};color:#000000;display:block;margin:0;padding:0;line-height:1;">${esc(name) || '&nbsp;'}</span>
+  <span class="smn-p" style="${TEXT_BOLD};color:#000000;display:block;margin:0;padding:0;line-height:1;">${esc(name) || '&nbsp;'}</span>
 </td></tr>
 
 <tr><td style="padding:0 0 20px 0;">
-  <span class="smn-p" style="${TEXT_STYLE};color:#000000;display:block;margin:0;padding:0;line-height:1;">${esc(role) || '&nbsp;'}</span>
+  <span class="smn-p" style="${TEXT_BOLD};color:#000000;display:block;margin:0;padding:0;line-height:1;">${esc(role) || '&nbsp;'}</span>
 </td></tr>
 
-<tr><td style="padding:0 0 20px 0;">
+<tr><td style="padding:0 0 10px 0;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr>
-    <td class="smn-s" style="${TEXT_STYLE};color:#595959;">${esc(phone) || '&nbsp;'}</td>
-    <td class="smn-s" style="${TEXT_STYLE};color:#595959;text-align:right;white-space:nowrap;">Operate as One</td>
+    <td class="smn-s" style="${TEXT_REGULAR};color:#595959;">${esc(phone) || '&nbsp;'}</td>
+    <td class="smn-s" style="${TEXT_REGULAR};color:#595959;text-align:right;white-space:nowrap;">Operate as One</td>
   </tr>
   </table>
 </td></tr>
 
 <tr><td class="smn-d" bgcolor="#595959" height="1" style="background-color:#595959;font-size:0;line-height:0;padding:0;">&nbsp;</td></tr>
 
-<tr><td style="height:20px;font-size:0;line-height:0;">&nbsp;</td></tr>
+<tr><td style="height:10px;font-size:0;line-height:0;">&nbsp;</td></tr>
 
 <tr><td style="padding:0;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -130,25 +133,25 @@ function signatureTable(
   return `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;border-collapse:collapse;">
 
 <tr><td style="padding:0 0 2px 0;">
-  <span style="${TEXT_STYLE};color:${primary};display:block;margin:0;padding:0;line-height:1;">${esc(name) || '&nbsp;'}</span>
+  <span style="${TEXT_BOLD};color:${primary};display:block;margin:0;padding:0;line-height:1;">${esc(name) || '&nbsp;'}</span>
 </td></tr>
 
 <tr><td style="padding:0 0 20px 0;">
-  <span style="${TEXT_STYLE};color:${primary};display:block;margin:0;padding:0;line-height:1;">${esc(role) || '&nbsp;'}</span>
+  <span style="${TEXT_BOLD};color:${primary};display:block;margin:0;padding:0;line-height:1;">${esc(role) || '&nbsp;'}</span>
 </td></tr>
 
-<tr><td style="padding:0 0 20px 0;">
+<tr><td style="padding:0 0 10px 0;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr>
-    <td style="${TEXT_STYLE};color:${secondary};">${esc(phone) || '&nbsp;'}</td>
-    <td style="${TEXT_STYLE};color:${secondary};text-align:right;white-space:nowrap;">Operate as One</td>
+    <td style="${TEXT_REGULAR};color:${secondary};">${esc(phone) || '&nbsp;'}</td>
+    <td style="${TEXT_REGULAR};color:${secondary};text-align:right;white-space:nowrap;">Operate as One</td>
   </tr>
   </table>
 </td></tr>
 
 <tr><td bgcolor="${divColor}" height="1" style="background-color:${divColor};font-size:0;line-height:0;padding:0;">&nbsp;</td></tr>
 
-<tr><td style="height:20px;font-size:0;line-height:0;">&nbsp;</td></tr>
+<tr><td style="height:10px;font-size:0;line-height:0;">&nbsp;</td></tr>
 
 <tr><td style="padding:0;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
