@@ -189,7 +189,9 @@ export default function Generator() {
             </div>
 
             {/* Preview iframe */}
-            <div className={previewMode === 'dark' ? 'bg-[#1C1C1C]' : 'bg-white'}>
+            {/* px-5 (20px) is tool-UI chrome only, for a cleaner look in this panel —
+                the generated/copied signature HTML itself has no left/right margin. */}
+            <div className={`px-5 ${previewMode === 'dark' ? 'bg-[#1C1C1C]' : 'bg-white'}`}>
               <iframe
                 key={previewMode}
                 ref={iframeRef}
